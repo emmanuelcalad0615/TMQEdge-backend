@@ -13,5 +13,4 @@ class Config:
     JWT_COOKIE_SECURE = False  # Cambiar a True en producción si usas HTTPS
     JWT_COOKIE_HTTPONLY = True  # Proteger la cookie contra accesos desde JavaScript
     JWT_ACCESS_COOKIE_NAME = 'access_token'  
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(seconds=50)
     #SECRET_KEY = os.getenv('FLASK_SECRET_KEY')
