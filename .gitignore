@@ -19,3 +19,5 @@ Thumbs.db  # Windows
 # Ignorar logs y archivos temporales
 *.log
 *.tmp
+
+.env
