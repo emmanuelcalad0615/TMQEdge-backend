@@ -18,7 +18,6 @@ def get_amplitud_data():
         response.raise_for_status()  
         
         if response.status_code == 200:
-            print("Procesando datos...")
             return response.json()
     except requests.exceptions.RequestException as e:
             return jsonify({"error": str(e)}), 500
