@@ -1,29 +1,20 @@
 from flask import jsonify, redirect, render_template, request, send_from_directory, url_for
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, set_access_cookies, unset_jwt_cookies
 from app import app, jwt
-from models.user import User
 
 
+@app.route("/debug-cookies")
+def debug_cookies():
+    print("Cookies recibidas:", request.cookies)  # Deberías ver access_token_cookie
+    return jsonify({"cookies": dict(request.cookies)})
 
-@app.route('/')
-def login():
-
-    return send_from_directory('templates', 'login.html')
-
-@app.route('/index')
-@jwt_required()
-def index():
-    token = request.cookies.get('access_token')
-    email_user = get_jwt_identity()
-
-    user = User.query.filter_by(email=email_user).first()
-
-    print(token)
-
-
-    return render_template('index.html', current_user=user)
-
-
+@app.after_request
+def add_cors_headers(response):
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')  # Para cookies
+    return response
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
@@ -34,17 +25,6 @@ def expired_token_callback(jwt_header, jwt_payload):
 @app.route('/register')
 def register():
     return send_from_directory('templates', 'register.html') 
-
-@app.route('/<path:filename>')
-def custom_templates(filename):
-    return send_from_directory('templates', filename)
-
-
-@app.route('/assets/<path:filename>')
-def custom_assets(filename):
-    return send_from_directory('assets', filename)
-
-
 
 
 if __name__ == '__main__':

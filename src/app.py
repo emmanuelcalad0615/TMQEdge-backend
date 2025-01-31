@@ -9,7 +9,9 @@ from config import Config
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app, 
+    supports_credentials=True,
+    origins = ["http://localhost:3000"]) 
 
 app.config.from_object(Config)  
 
@@ -25,6 +27,7 @@ api_bp.register_blueprint(amplitud_bp)
 api_bp.register_blueprint(dashboard_bp)
 
 app.register_blueprint(api_bp)
+
 
 db.init_app(app)
 
