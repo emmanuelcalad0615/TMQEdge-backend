@@ -9,8 +9,9 @@ dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
 
 @dashboard_bp.route('/create', methods=['POST'])
-@jwt_required()  
+@jwt_required(optional=True)                    
 def create_dashboard():
+
     data = request.json
     user_email = get_jwt_identity() 
     user = User.query.filter_by(email=user_email).first()  
@@ -18,14 +19,15 @@ def create_dashboard():
     if not user:
         return jsonify({'msg': 'User not found'}), 404
 
-    name = data.get('name')
+    print(data)
+    dashboard_name = data.get('dashboardName')
     predeterminado = data.get('predeterminado', True) 
     description = data.get('description', '')  
 
-    if not name:
+    if not dashboard_name:
         return jsonify({'msg': 'Name is required'}), 400 
 
-    new_dashboard = Dashboard(user_id=user.id, name=name, predeterminado=predeterminado, description=description)
+    new_dashboard = Dashboard(user_id=user.id, name=dashboard_name, predeterminado=predeterminado, description=description)
 
     db.session.add(new_dashboard)
     db.session.commit()
