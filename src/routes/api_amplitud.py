@@ -72,7 +72,7 @@ def get_data_nyse_with_header(header:str):
 
 @amplitud_bp.route('/datos', methods=['GET'])
 def ver_datos():
-    processed_data = get_data_nyse_with_header("RASI")
+    processed_RASI_data = get_data_nyse_with_header("RASI")
 
-    return jsonify(processed_data), 200
+    return jsonify(processed_RASI_data), 200
 

@@ -11,16 +11,14 @@ from flask_jwt_extended import JWTManager
 app = Flask(__name__)
 CORS(app, 
     supports_credentials=True,
-    origins = ["http://localhost:3000"]) 
+    origins=['*']
+    ) 
 
 app.config.from_object(Config)  
 
 jwt = JWTManager(app)
 
-
-
 api_bp = Blueprint('api', __name__, url_prefix='/api')
-
 
 api_bp.register_blueprint(auth_bp)
 api_bp.register_blueprint(amplitud_bp)

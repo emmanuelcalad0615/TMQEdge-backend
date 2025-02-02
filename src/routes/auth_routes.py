@@ -1,5 +1,5 @@
 from flask import Blueprint, make_response, request, jsonify
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, set_access_cookies, set_refresh_cookies, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, create_refresh_token, decode_token, get_jwt_identity, jwt_required, set_access_cookies, set_refresh_cookies, unset_jwt_cookies, verify_jwt_in_request
 from utils.db import db
 from models.user import User
 from models.dashboard import Dashboard
@@ -36,9 +36,9 @@ def register():
 @auth_bp.route('/login', methods=['POST'])
 def login():
 
-    token = request.cookies.get('access_token')
-    if token:
-        return jsonify(msg = 'Theres an user logged in'), 400
+    # token = request.cookies.get('access_token')
+    # if token:
+    #      return jsonify(msg = 'Theres an user logged in'), 400
 
     email = request.json.get('email')
     password = request.json.get('password')
@@ -55,10 +55,9 @@ def login():
                        msg='Login successful',
                        user={"name":  user.name, "email": user.email},
                        ))
-    set_access_cookies(response, access_token, max_age=60*60*24*7)
-    response.set_cookie('access_token', access_token, httponly=True)
-
-    print(access_token)
+    #response.set_cookie('access_token', access_token)
+    set_access_cookies(response, access_token)
+    print(request.cookies)
     print(response.get_json())
     return response, 200
 
@@ -66,7 +65,6 @@ def login():
 def logout():
     response = jsonify({'msg': 'Logout successful'})
     unset_jwt_cookies(response)
-    response.delete_cookie('access_token')
 
     return response, 200
 
@@ -76,5 +74,4 @@ def check_auth():
     current_user = get_jwt_identity()
     print(current_user)
     return jsonify({"isAuthenticated": current_user is not None}), 200
-
 
