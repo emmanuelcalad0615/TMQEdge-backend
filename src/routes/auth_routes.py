@@ -57,8 +57,7 @@ def login():
                        ))
     #response.set_cookie('access_token', access_token)
     set_access_cookies(response, access_token)
-    print(request.cookies)
-    print(response.get_json())
+
     return response, 200
 
 @auth_bp.route('/logout', methods=['POST'])

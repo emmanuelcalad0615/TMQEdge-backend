@@ -116,8 +116,24 @@ def delete_dashboard(dashboard_id):
     return jsonify({'msg': 'Dashboard deleted successfully'}), 200
 
 
+@dashboard_bp.route('/get_names', methods=['GET'])
+@jwt_required()
+def get_dashboards_names():
+    user_email = get_jwt_identity()
+    user = User.query.filter_by(email=user_email).first()
 
+    user_dashboards = Dashboard.query.filter_by(user_id=user.id).all()
 
+    if not user_dashboards:
+        return jsonify({'dashboards': None}), 404
+
+    dashboards_data = []
+    for dashboard in user_dashboards:
+        dashboards_data.append({
+            'id':dashboard.id,
+            'name': dashboard.name,
+        })
+    return jsonify({'dashboards': dashboards_data}), 200
 
 
 
