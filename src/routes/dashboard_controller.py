@@ -9,7 +9,7 @@ dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 
 
 @dashboard_bp.route('/create', methods=['POST'])
-@jwt_required(optional=True)                    
+@jwt_required()                    
 def create_dashboard():
 
     data = request.json
@@ -21,7 +21,7 @@ def create_dashboard():
 
     print(data)
     dashboard_name = data.get('dashboardName')
-    predeterminado = data.get('predeterminado', True) 
+    predeterminado = data.get('predeterminado', False) 
     description = data.get('description', '')  
 
     if not dashboard_name:
@@ -93,7 +93,18 @@ def update_dashboard(dashboard_id):
 
     return jsonify({'msg': 'Dashboard updated successfully'}), 200
 
+@dashboard_bp.route('/get_dashboard/<int:dashboard_id>', methods=['GET'])
+@jwt_required()
+def get_one_dashboard(dashboard_id):
+    user_email = get_jwt_identity()
+    user = User.query.filter_by(email=user_email).first()
 
+    dashboard = Dashboard.query.filter_by(id=dashboard_id, user_id=user.id).first()
+
+    if not dashboard:
+        return jsonify({'msg':'Dashboard not found'}), 404
+
+    return jsonify({'msg': dashboard}), 200
 
 @dashboard_bp.route('/delete/<int:dashboard_id>', methods=['DELETE'])
 @jwt_required()  

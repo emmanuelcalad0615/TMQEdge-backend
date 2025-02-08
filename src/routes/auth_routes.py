@@ -64,7 +64,7 @@ def login():
 def logout():
     response = jsonify({'msg': 'Logout successful'})
     unset_jwt_cookies(response)
-
+    
     return response, 200
 
 @auth_bp.route('/check-auth', methods=['GET'])

@@ -3,6 +3,10 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from app import app, jwt
 
 
+@app.route('/')
+def index():
+    return jsonify({"msg": "it works!!"})
+
 @app.route("/debug-cookies")
 def debug_cookies():
     print("Cookies recibidas:", request.cookies)  # Deberías ver access_token_cookie
@@ -21,10 +25,6 @@ def expired_token_callback(jwt_header, jwt_payload):
     response = jsonify({'msg': 'Token has expired'})
     response.delete_cookie('access_token')
     return redirect('/')
-
-@app.route('/register')
-def register():
-    return send_from_directory('templates', 'register.html') 
 
 
 if __name__ == '__main__':
